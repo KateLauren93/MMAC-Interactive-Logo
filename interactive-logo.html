@@ -1,0 +1,186 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Interactive Logo</title>
+
+<script src="https://d309knd7es5f10.cloudfront.net/createjs_1.1_min.js"></script>
+<script src="https://d309knd7es5f10.cloudfront.net/zim_9.3.0.js"></script>
+
+<script>
+
+var scaling = "fit";
+var width = 1024;
+var height = 768;
+var color = "#ededed";
+var outerColor = dark;
+var assets = ["swimmer.png"];
+var path = "http://kate-carson.com/interactive-logo/assets/";
+
+var frame = new Frame(scaling, width, height, color, outerColor, assets, path);
+frame.loadAssets({src:"https://fonts.googleapis.com/css?family=Oxygen"});
+frame.on("ready", function() {
+zog("Ready from ZIM Frame");
+
+var stage = frame.stage;
+var stageW = frame.width;
+var stageH = frame.height;
+
+var path = new Squiggle({
+    color:frame.color,
+    points:[
+        [5.2,79.9,0,0,-136.1,23.5,136.1,-23.5,"mirror"],
+        [296.3,92.6,0,0,-83.5,-7.3,83.5,7.3,"mirror"],
+        [596,48.3,0,0,-108.3,47.3,108.3,-47.3,"mirror"]
+    ],
+    length:600,
+    showControls:false,
+    lockControls:true,
+    allowToggle:false
+}).center().loc(205, 178);
+
+var swimmer = frame.asset("swimmer.png")
+.centerReg()
+.animate({
+    props:{path:path, flip:true},
+    time:2000,
+    ease:"quadInOut",
+    loop:true,
+    rewind:true,
+    override:false,
+    dynamic:true,
+    startPaused:true
+});
+
+var label = new Label({
+    text:"MMAC",
+    size:100,
+    font:"oxygen",
+    color:"#33cc99",
+    align:"center"
+}).center().pos(null, 550);
+
+var label = new Label({
+    text:"Swimmer Speed",
+    size:25,
+    font:"oxygen",
+    color:"#33cc99"
+}).pos(140, 700);
+
+var slider = new Slider({
+    min:0,
+    max:500,
+    step:50,
+    barColor:"#33cc99",
+    useTicks:true,
+    damp:0.1
+}).centerReg().pos(null,700);
+slider.currentValue = 0;
+Ticker.add(function () {
+    swimmer.percentSpeed = slider.currentValue;
+});
+
+var wave1 = new Blob({
+    color:"#1dacd6",
+    points:[
+        [9.9,-93.9,0,0,-245,-24.1,203.6,20],
+        [424.5,-210.7,0,0,-146.8,85.3,-91,126.6,"free"],
+        [-2.9,-0.9,0,0,226,20.3,-195.4,-17.6],
+        [-478.8,13.9,0,0,219.3,-107.2,201.9,-162.6,"free"]
+    ],
+    showControls:false,
+    lockControls:true,
+    allowToggle:false
+}).center().loc(532, 452);
+
+var points1 = wave1.pointObjects;
+
+points1[0][0].wiggle({
+    property:"rotation",
+    baseAmount:0,
+    minAmount:5,
+    maxAmount:10,
+    minTime:500,
+    maxTime:2000,
+    startType:"negative"
+});
+
+points1[1][0].wiggle({
+    property:"rotation",
+    baseAmount:0,
+    minAmount:15,
+    maxAmount:20,
+    minTime:1000,
+    maxTime:2000,
+    startType:"positive"
+});
+
+points1[2][0].wiggle({
+    property:"rotation",
+    baseAmount:0,
+    minAmount:5,
+    maxAmount:10,
+    minTime:500,
+    maxTime:2000,
+    startType:"negative"
+});
+
+points1[3][0].wiggle({
+    property:"rotation",
+    baseAmount:0,
+    minAmount:15,
+    maxAmount:20,
+    minTime:1000,
+    maxTime:2000,
+    startType:"positive"
+});
+
+Ticker.add(function () {
+    wave1.update();
+});
+
+var wave2 = new Blob({
+    color:"#1dacd6",
+    points:[
+        [-46.8,-95.5,0,0,-245,-24.1,203.6,20],
+        [266.5,-162.9,0,0,-107.9,56.1,-61,56.9,"free"],
+        [-49.9,-53.6,0,0,226,20.3,-195.4,-17.6],
+        [-430.2,-93.8,0,0,131,-40.8,113.6,-83.2,"free"]
+    ],
+    showControls:false,
+    lockControls:true,
+    allowToggle:false
+}).center().loc(566, 573);
+
+var points2 = wave2.pointObjects;
+
+Ticker.add(function () {
+    points2[0][0].rotation=points1[0][0].rotation;
+    points2[1][0].rotation=points1[1][0].rotation;
+    points2[2][0].rotation=points1[2][0].rotation;
+    points2[3][0].rotation=points1[3][0].rotation;
+    wave2.update();
+});
+
+frame.on("keydown", function(e) {
+    zog(e.keyCode);
+    if (e.keyCode == 82) {
+        path.recordPoints(true);
+    }
+});
+
+stage.update();
+
+});
+
+</script>
+
+<meta name="viewport" content="width=device-width, user-scalable=no" />
+
+</head>
+
+<body>
+<!-- Canvas with id="myCanvas" is made by ZIM Frame -->
+</body>
+
+</html>
